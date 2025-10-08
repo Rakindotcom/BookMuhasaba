@@ -4,7 +4,7 @@ const ImageSlideshow = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
-  const images = ['1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', '5.jpeg']
+  const images = ['1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', '5.jpeg', '6.jpeg']
 
   // Auto-advance slides every 5 seconds
   useEffect(() => {
@@ -55,10 +55,10 @@ const ImageSlideshow = () => {
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             প্রোডাক্ট গ্যালারি
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-xl text-gray-600">
             মুহাসাবা জার্নালের একাংশ দেখুন
           </p>
         </div>
@@ -110,7 +110,7 @@ const ImageSlideshow = () => {
               </button>
 
               {/* Slide Counter */}
-              <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+              <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-lg">
                 {currentSlide + 1} / {images.length}
               </div>
             </div>

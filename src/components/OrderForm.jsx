@@ -5,13 +5,22 @@ import { db } from '../firebase/config'
 const OrderForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    package: '',
     address: '',
-    whatsapp: '',
-    paymentMethod: '',
-    paymentDetails: ''
+    mobile: '',
+    package: 'single',
+    paymentMethod: 'cod'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const packages = {
+    single: { price: 420, name: 'সিঙ্গেল প্যাক - ১টি প্ল্যানার', quantity: 1, shipping: 70 },
+    family: { price: 1200, name: 'ফ্যামিলি প্যাক - ৩টি প্ল্যানার', quantity: 3, shipping: 0 }
+  }
+
+  const selectedPackage = packages[formData.package]
+  const subtotal = selectedPackage.price
+  const shippingCost = selectedPackage.shipping
+  const total = subtotal + shippingCost
 
   const handleChange = (e) => {
     setFormData({
@@ -20,28 +29,33 @@ const OrderForm = () => {
     })
   }
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     try {
       // Add order to Firestore
       await addDoc(collection(db, 'orders'), {
         ...formData,
+        packageDetails: selectedPackage,
+        subtotal,
+        shippingCost,
+        total,
         createdAt: serverTimestamp(),
         status: 'pending'
       })
-      
+
       alert('অর্ডার সফলভাবে জমা দেওয়া হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।')
-      
+
       // Reset form
       setFormData({
         name: '',
-        package: '',
         address: '',
-        whatsapp: '',
-        paymentMethod: '',
-        paymentDetails: ''
+        mobile: '',
+        package: 'single',
+        paymentMethod: 'cod'
       })
     } catch (error) {
       console.error('Error submitting order:', error)
@@ -54,153 +68,226 @@ const OrderForm = () => {
   return (
     <section id="order-form" className="py-16 bg-gradient-to-br from-green-50 to-blue-50">
       <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              এখনই অর্ডার করুন!
+            <h2 className="text-6xl md:text-7xl font-bold text-gray-800 mb-4">
+             অর্ডার করুন
             </h2>
-            <p className="text-lg text-gray-600">
-              ফর্ম পূরণ করে অর্ডার করে ফেলুন ইনশাআল্লাহ!
-            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
-            <div className="space-y-6">
-              {/* Name */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  আপনার নামটি দিন ইনশাআল্লাহ *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="আপনার পূর্ণ নাম লিখুন"
-                />
-              </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Left Column - Product & Form */}
+            <div className="space-y-8">
+              {/* Product Section */}
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <div className="flex items-center space-x-6 mb-8">
+                  <img
+                    src="/public/1.jpeg"
+                    alt="মুহাসাবা জার্নাল"
+                    className="w-24 h-24 object-cover rounded-lg"
+                  />
+                  <div className="flex-1">
+                    <h3 className="text-3xl font-semibold text-gray-800 mb-4">
+                      মুহাসাবা জার্নাল - দ্য মুসলিম হ্যাবিট ট্র্যাকার
+                    </h3>
 
-              {/* Package Selection */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  যে প্যাকটি সংগ্রহ করতে চান *
-                </label>
-                <div className="space-y-3">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="package"
-                      value="single"
-                      onChange={handleChange}
-                      className="mr-3"
-                      required
-                    />
-                    <span>সিঙ্গেল - ১ পিস (৪৯০ টাকা)</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="package"
-                      value="family"
-                      onChange={handleChange}
-                      className="mr-3"
-                      required
-                    />
-                    <span>ফ্যামিলি প্যাক - ৩ পিস (১,২০০ টাকা)</span>
-                  </label>
+                    {/* Package Selection */}
+                    <div className="space-y-4">
+                      <h4 className="text-2xl font-semibold text-gray-700">প্যাকেজ নির্বাচন করুন:</h4>
+                      <div className="space-y-3">
+                        <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-300 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="package"
+                            value="single"
+                            checked={formData.package === 'single'}
+                            onChange={handleChange}
+                            className="mr-4 w-5 h-5"
+                          />
+                          <div className="flex-1">
+                            <span className="text-xl font-medium">সিঙ্গেল প্যাক - ১টি প্ল্যানার</span>
+                            <div className="text-2xl font-bold text-green-600">৳৪২০</div>
+                          </div>
+                        </label>
+
+                        <label className="flex items-center p-4 border-2 border-yellow-300 bg-yellow-50 rounded-lg hover:border-yellow-400 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="package"
+                            value="family"
+                            checked={formData.package === 'family'}
+                            onChange={handleChange}
+                            className="mr-4 w-5 h-5"
+                          />
+                          <div className="flex-1">
+                            <span className="text-xl font-medium">ফ্যামিলি প্যাক - ৩টি প্ল্যানার</span>
+                            <div className="text-2xl font-bold text-orange-600">৳১,২০০ - ডেলিভারি চার্জ ফ্রি!</div>
+                            <div className="text-xl text-green-600 font-semibold">১৩০ টাকা সেইভ!</div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Address */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  যে ঠিকানায় ডেলিভারি করতে হবে সেটার বিস্তারিত ঠিকানা ও ফোন নাম্বারটি দিন *
-                </label>
-                <textarea
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                  rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                  placeholder="সম্পূর্ণ ঠিকানা ও ফোন নাম্বার লিখুন"
-                />
-              </div>
-
-              {/* WhatsApp */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  আপনার হোয়াট্সঅ্যাপ নাম্বারটি দিন *
-                </label>
-                <input
-                  type="tel"
-                  name="whatsapp"
-                  value={formData.whatsapp}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="ইংরেজিতে লিখুন (যেমন: 01XXXXXXXXX)"
-                />
-              </div>
-
-              {/* Payment Method */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  মূল্য পরিশোধ করতে চাচ্ছেন যে মাধ্যমে - সেন্ডমানি করবেন *
-                </label>
-                <div className="space-y-2">
-                  {[
-                    'বিকাশ - 01779049560 - Name: Jahid Hasan Milu',
-                    'নগদ - 01779049560',
-                    'রকেট - 01779049560',
-                    'ব্যাংক একাউন্ট - ব্যাংক একাউন্ট নাম্বার উপরের ডিটেইলসে দেওয়া আছে',
-                    'ক্যাশ অন ডেলিভারি'
-                  ].map((method, index) => (
-                    <label key={index} className="flex items-start">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value={method}
-                        onChange={handleChange}
-                        className="mr-3 mt-1"
-                        required
-                      />
-                      <span className="text-base">{method}</span>
+              {/* Billing Details */}
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h3 className="text-4xl font-bold text-gray-800 mb-8">Billing details</h3>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-xl font-medium text-gray-700 mb-2">
+                      আপনার নাম লিখুন *
                     </label>
-                  ))}
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="আপনার নাম লিখুন"
+                    />
+                    {!formData.name && (
+                      <p className="text-red-500 text-xl mt-1">আপনার নাম লিখুন is required</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xl font-medium text-gray-700 mb-2">
+                      বিস্তারিত ঠিকানা দিন, যেখানে পণ্যটি রিসিভ করতে চান *
+                    </label>
+                    <textarea
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      required
+                      rows="4"
+                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                      placeholder="বিস্তারিত ঠিকানা লিখুন"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xl font-medium text-gray-700 mb-2">
+                      আপনার মোবাইল নাম্বার লিখুন *
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="মোবাইল নাম্বার লিখুন"
+                    />
+                  </div>
+
+                  {/* Shipping */}
+                  <div className="pt-4">
+                    <h4 className="text-2xl font-semibold text-gray-800 mb-4">Shipping</h4>
+                    <div className="space-y-3">
+                      {formData.package === 'single' && (
+                        <div className="p-4 bg-blue-50 rounded-lg">
+                          <p className="text-blue-700 font-semibold text-xl">
+                            📦 ডেলিভারি চার্জ: ৳70 (সারাদেশে)
+                          </p>
+                        </div>
+                      )}
+                      {formData.package === 'family' && (
+                        <div className="p-4 bg-green-100 rounded-lg">
+                          <p className="text-green-700 font-semibold text-xl">
+                            🎉 ফ্যামিলি প্যাক - ডেলিভারি চার্জ ফ্রি!
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* Right Column - Order Summary */}
+            <div className="bg-white p-8 rounded-lg shadow-lg h-fit">
+              <h3 className="text-4xl font-bold text-gray-800 mb-8">Your order</h3>
+
+              <div className="space-y-6 mb-8">
+                <div className="flex justify-between items-center pb-3 border-b-2">
+                  <span className="font-medium text-xl">Product</span>
+                  <span className="font-medium text-xl">Subtotal</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div>
+                    <span className="text-xl">{selectedPackage.name}</span>
+                    {formData.package === 'family' && (
+                      <div className="text-xl text-green-600 font-semibold">ফ্যামিলি প্যাক অফার</div>
+                    )}
+                  </div>
+                  <span className="text-xl">৳{subtotal.toLocaleString()}</span>
+                </div>
+
+                {formData.package === 'family' && (
+                  <div className="flex justify-between items-center text-xl text-green-600">
+                    <span>সেইভিংস (নিয়মিত দাম ৳{(490 * 3).toLocaleString()})</span>
+                    <span>-৳{((490 * 3) - subtotal).toLocaleString()}</span>
+                  </div>
+                )}
+
+                {shippingCost > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-xl">ডেলিভারি চার্জ</span>
+                    <span className="text-xl">৳{shippingCost}</span>
+                  </div>
+                )}
+
+                {formData.package === 'family' && (
+                  <div className="flex justify-between items-center text-green-600">
+                    <span className="text-xl">ডেলিভারি চার্জ (ফ্রি)</span>
+                    <span className="text-xl">৳0</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center pt-3 border-t-2">
+                  <span className="font-medium text-xl">Subtotal</span>
+                  <span className="text-xl">৳{subtotal.toLocaleString()}</span>
+                </div>
+
+                <div className="flex justify-between items-center text-3xl font-bold pt-3 border-t-2">
+                  <span>Total</span>
+                  <span>৳{total.toLocaleString()}</span>
                 </div>
               </div>
 
-              {/* Payment Details */}
-              <div>
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  যে ফোন নাম্বার বা ব্যাংক একাউন্ট থেকে মূল্য পরিশোধ করেছেন সেটা লিখুন
-                </label>
-                <input
-                  type="text"
-                  name="paymentDetails"
-                  value={formData.paymentDetails}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="পেমেন্ট ডিটেইলস বা 'ক্যাশ অন ডেলিভারি' লিখুন"
-                />
-                <p className="text-base text-gray-500 mt-2">
-                  কষ্ট করে পেমেন্টের একটা স্ক্রিনশট দিয়েন আমাদের এই 01933-554982 ওয়াটসঅ্যাপ নাম্বারে
+              {/* Payment Methods */}
+              <div className="space-y-6 mb-8">
+                <div className="flex items-center p-3 border border-gray-200 rounded-lg">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={formData.paymentMethod === 'cod'}
+                    onChange={handleChange}
+                    className="mr-4 w-5 h-5"
+                  />
+                  <span className="font-medium text-xl">সম্পূর্ণ ক্যাশ অন ডেলিভারি</span>
+                </div>
+                <p className="text-xl text-gray-600 ml-6">
+                  শতভাগ নিশ্চিত হয়ে অর্ডার করুন প্লিজ। ফেইক অর্ডারে আমরা ক্ষতিগ্রস্ত হই।
                 </p>
               </div>
 
-              {/* Submit Button */}
+  
               <button
                 type="submit"
+                onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-green-700 hover:to-blue-700 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-5 px-10 rounded-lg font-semibold text-2xl hover:from-green-700 hover:to-blue-700 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'অর্ডার জমা দেওয়া হচ্ছে...' : 'অর্ডার সাবমিট করুন'}
+                {isSubmitting ? 'অর্ডার জমা দেওয়া হচ্ছে...' : `অর্ডার করুন ৳${total.toLocaleString()}`}
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section>

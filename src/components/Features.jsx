@@ -1,4 +1,3 @@
-import React from 'react'
 
 const Features = () => {
   const features = [
@@ -11,7 +10,7 @@ const Features = () => {
       description: "নামাজ, কুরআন, সদকা, পরিবারকে সময়, অফিস - সবকিছু নিয়মিত টিক দিয়ে ট্র্যাক করতে পারবেন।"
     },
     {
-      title: "স্কোরিং সিস্টেম", 
+      title: "স্কোরিং সিস্টেম",
       description: "দৈনিক ও সাপ্তাহিক স্কোরিং - প্রতিদিনের ও প্রতি সপ্তাহের উন্নতি ও অবনতি দেখতে পারবেন।"
     },
     {
@@ -31,21 +30,21 @@ const Features = () => {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
             মুহাসাবা জার্নাল কী:
           </h2>
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-            সহজ করে বললে এটি কিছুটা বইয়ের এবং কিছুটা ডায়েরি মতো, যেটিকে গাইডেড জার্নাল বলা হয়, 
+          <p className="text-2xl text-gray-600 max-w-4xl mx-auto">
+            সহজ করে বললে এটি কিছুটা বইয়ের এবং কিছুটা ডায়েরি মতো, যেটিকে গাইডেড জার্নাল বলা হয়,
             যেটি একজন মুসলিমের দিন, আমল, অভ্যাস ও আত্মউন্নয়নকে সুন্দরভাবে গাইড এবং ট্র্যাক করতে সাহায্য করে।
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-gradient-to-br from-green-50 to-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+            <div key={index} className="bg-gradient-to-br from-green-50 to-blue-50 p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-3xl font-semibold text-gray-800 mb-4">{feature.title}</h3>
+              <p className="text-xl text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>
