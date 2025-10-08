@@ -6,18 +6,18 @@ const About = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-bold text-center text-gray-800 mb-16">
-            কাদের জন্য এটা:
+            কাদের জন্য এটা
           </h2>
           
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="bg-white p-10 rounded-lg shadow-md">
-              <p className="text-xl text-gray-600">
+              <p className="text-2xl text-gray-600">
                 যারা নিজেদের উন্নতির ব্যাপারে সিরিয়াস, কিন্তু কোথা থেকে শুরু করবেন বুঝতে পারছেন না।
               </p>
             </div>
             
             <div className="bg-white p-10 rounded-lg shadow-md">
-              <p className="text-xl text-gray-600">
+              <p className="text-2xl text-gray-600">
                 যাদের রেগুলার জার্নালিং রুটিন নেই, কিন্তু মাইন্ডফুলনেস ও মুহাসাবা প্র্যাকটিস করতে চান।
               </p>
             </div>
@@ -28,13 +28,13 @@ const About = () => {
               ট্র্যাকারটি তৈরি করেছেন
             </h3>
             <div className="text-center">
-              <h4 className="text-3xl font-semibold text-green-600 mb-4">
+              <h4 className="text-4xl font-semibold text-green-600 mb-4">
                 হাফেজ মাওলানা জাহিদ হাসান মিলু
               </h4>
-              <p className="text-xl text-gray-600 mb-1">
+              <p className="text-2xl text-gray-600 mb-1">
                 স্নাতক, গণযোগাযোগ ও সাংবাদিকতা বিভাগ, ঢাকা বিশ্ববিদ্যালয়
               </p>
-              <p className="text-xl text-gray-600">
+              <p className="text-2xl text-gray-600">
                 প্রোফেটিক প্রোডাক্টিভিটি কোচ, ডিভাইন কনসালটেন্সি
               </p>
             </div>

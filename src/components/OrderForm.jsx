@@ -81,11 +81,6 @@ const OrderForm = () => {
               {/* Product Section */}
               <div className="bg-white p-8 rounded-lg shadow-lg">
                 <div className="flex items-center space-x-6 mb-8">
-                  <img
-                    src="/public/1.jpeg"
-                    alt="মুহাসাবা জার্নাল"
-                    className="w-24 h-24 object-cover rounded-lg"
-                  />
                   <div className="flex-1">
                     <h3 className="text-3xl font-semibold text-gray-800 mb-4">
                       মুহাসাবা জার্নাল - দ্য মুসলিম হ্যাবিট ট্র্যাকার
@@ -133,7 +128,6 @@ const OrderForm = () => {
 
               {/* Billing Details */}
               <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-4xl font-bold text-gray-800 mb-8">Billing details</h3>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label className="block text-xl font-medium text-gray-700 mb-2">
@@ -190,14 +184,14 @@ const OrderForm = () => {
                       {formData.package === 'single' && (
                         <div className="p-4 bg-blue-50 rounded-lg">
                           <p className="text-blue-700 font-semibold text-xl">
-                            📦 ডেলিভারি চার্জ: ৳70 (সারাদেশে)
+                            ডেলিভারি চার্জ: ৳৭০ (সারাদেশে)
                           </p>
                         </div>
                       )}
                       {formData.package === 'family' && (
                         <div className="p-4 bg-green-100 rounded-lg">
                           <p className="text-green-700 font-semibold text-xl">
-                            🎉 ফ্যামিলি প্যাক - ডেলিভারি চার্জ ফ্রি!
+                            ফ্যামিলি প্যাক - ডেলিভারি চার্জ ফ্রি!
                           </p>
                         </div>
                       )}
@@ -226,13 +220,6 @@ const OrderForm = () => {
                   </div>
                   <span className="text-xl">৳{subtotal.toLocaleString()}</span>
                 </div>
-
-                {formData.package === 'family' && (
-                  <div className="flex justify-between items-center text-xl text-green-600">
-                    <span>সেইভিংস (নিয়মিত দাম ৳{(490 * 3).toLocaleString()})</span>
-                    <span>-৳{((490 * 3) - subtotal).toLocaleString()}</span>
-                  </div>
-                )}
 
                 {shippingCost > 0 && (
                   <div className="flex justify-between items-center">

@@ -32,7 +32,7 @@ const Features = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6">
-            মুহাসাবা জার্নাল কী:
+            মুহাসাবা জার্নাল কী
           </h2>
           <p className="text-2xl text-gray-600 max-w-4xl mx-auto">
             সহজ করে বললে এটি কিছুটা বইয়ের এবং কিছুটা ডায়েরি মতো, যেটিকে গাইডেড জার্নাল বলা হয়,
@@ -44,7 +44,7 @@ const Features = () => {
           {features.map((feature, index) => (
             <div key={index} className="bg-gradient-to-br from-green-50 to-blue-50 p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
               <h3 className="text-3xl font-semibold text-gray-800 mb-4">{feature.title}</h3>
-              <p className="text-xl text-gray-600">{feature.description}</p>
+              <p className="text-2xl text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>

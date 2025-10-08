@@ -58,7 +58,7 @@ const ImageSlideshow = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             প্রোডাক্ট গ্যালারি
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-2xl text-gray-600">
             মুহাসাবা জার্নালের একাংশ দেখুন
           </p>
         </div>
