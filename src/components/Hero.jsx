@@ -13,7 +13,7 @@ const Hero = () => {
           </h2>
 
           <div className="bg-yellow-400 text-black p-8 rounded-lg mb-10 shadow-lg">
-            <h3 className="text-3xl font-bold mb-6">আপনার জন্য একটি বিশেষ হাদিয়া</h3>
+            <h3 className="text-3xl font-bold mb-1">আপনার জন্য একটি বিশেষ হাদিয়া</h3>
             <p className="text-2xl">
               এই মুহূর্তে অর্ডার করলে আমাদের ৪৭০ টাকা মূল্যের
               <span className="font-bold"> 'প্রোডাক্টিভ লাইফ উইথ সালাত' </span>
@@ -22,7 +22,7 @@ const Hero = () => {
           </div>
 
           <div className="bg-red-900 text-white p-6 rounded-lg shadow-lg mb-8">
-            <h3 className="text-3xl font-bold mb-6">যে সুবিধা বাংলাদেশের আর কেউ দিচ্ছে না</h3>
+            <h3 className="text-3xl font-bold mb-1">যে সুবিধা বাংলাদেশের আর কেউ দিচ্ছে না</h3>
             <p className="text-2xl">
               এটি সংগ্রহের মাধ্যমে আপনি আমাদের কমিউনিটির
               লাইফটাইম মেম্বার হয়ে যাবেন। প্রতিমাসে একটি ফ্রি লাইভ সেশনের মাধ্যমে আপনার মাসিক রিপোর্ট

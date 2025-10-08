@@ -32,8 +32,8 @@ const Contact = () => {
           <div className="mt-12 text-center">
             <div className="bg-gray-700 p-8 rounded-lg">
               <h3 className="text-3xl font-bold mb-6">গুরুত্বপূর্ণ তথ্য</h3>
-              <ul className="text-left space-y-3 max-w-2xl mx-auto text-xl">
-                মুহাসাবা জার্নালটি হাতে পেয়ে  হোয়াটসঅ্যাপ গ্রুপে জয়েন করে ফেলবেন। সেখানে বাকি সকল আপডেট পাবেন ইনশাআল্লাহ।
+              <ul className="text-center space-y-3 max-w-2xl mx-auto text-xl">
+                মুহাসাবা জার্নালটি হাতে পেয়ে হোয়াটসঅ্যাপ গ্রুপে জয়েন করে ফেলবেন। সেখানে বাকি সকল আপডেট পাবেন ইনশাআল্লাহ।
               </ul>
             </div>
           </div>
