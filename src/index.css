@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&display=swap');
+
+@import "tailwindcss";
+
+
+body {
+  font-family: "Anek Bangla", sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Slideshow specific styles */
+.slideshow-container {
+  position: relative;
+}
+
+.slideshow-container img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Portrait image handling */
+.slideshow-main-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Thumbnail styles for portrait images */
+.slideshow-thumbnail {
+  object-fit: contain;
+  object-position: center;
+  background-color: white;
+}
+
+/* Mobile optimizations for slideshow */
+@media (max-width: 768px) {
+  .slideshow-container {
+    margin: 0 -1rem;
+  }
+
+  .slideshow-container .container {
+    padding: 0;
+  }
+}
+
+/* Prevent text selection during swipe */
+.slideshow-container * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
