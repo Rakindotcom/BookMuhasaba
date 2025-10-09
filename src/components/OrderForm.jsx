@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import Toast from './Toast'
+import { useToast } from '../hooks/useToast'
 
 const OrderForm = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ const OrderForm = () => {
     paymentMethod: 'cod'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast, showToast, hideToast } = useToast()
 
   const packages = {
     single: { price: 420, name: 'সিঙ্গেল প্যাক - ১টি প্ল্যানার', quantity: 1, shipping: 70 },
@@ -47,7 +50,7 @@ const OrderForm = () => {
         status: 'pending'
       })
 
-      alert('অর্ডার সফলভাবে জমা দেওয়া হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।')
+      showToast('অর্ডার সফলভাবে জমা দেওয়া হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।', 'success')
 
       // Reset form
       setFormData({
@@ -59,7 +62,7 @@ const OrderForm = () => {
       })
     } catch (error) {
       console.error('Error submitting order:', error)
-      alert('অর্ডার জমা দিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।')
+      showToast('অর্ডার জমা দিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।', 'error')
     } finally {
       setIsSubmitting(false)
     }
@@ -117,7 +120,7 @@ const OrderForm = () => {
                           <div className="flex-1">
                             <span className="text-xl font-medium">ফ্যামিলি প্যাক - ৩টি প্ল্যানার</span>
                             <div className="text-2xl font-bold text-orange-600">৳১,২০০ - ডেলিভারি চার্জ ফ্রি!</div>
-                            <div className="text-xl text-green-600 font-semibold">১৩০ টাকা সেইভ!</div>
+                            <div className="text-xl text-green-600 font-semibold">২৭০ টাকা সেইভ!</div>
                           </div>
                         </label>
                       </div>
@@ -277,6 +280,14 @@ const OrderForm = () => {
           </div>
         </div>
       </div>
+      
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+        duration={toast.duration}
+      />
     </section>
   )
 }

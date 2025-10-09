@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Orders collection - allow create only, restrict read/update/delete
+    match /orders/{orderId} {
+      // Allow anyone to create new orders (for your order form)
+      allow create: if isValidOrder();
+      
+      // Only allow reading orders with valid structure (for admin purposes)
+      // You can modify this based on your admin authentication needs
+      allow read: if false; // Set to true if you need to read orders from frontend
+      
+      // Prevent updates and deletes from frontend
+      allow update, delete: if false;
+    }
+    
+    // Test collection - remove in production
+    match /test/{document} {
+      allow read, write: if false; // Disable test collection
+    }
+    
+    // Deny access to all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+  
+  // Validation function for orders
+  function isValidOrder() {
+    let order = request.resource.data;
+    return order.keys().hasAll(['name', 'address', 'mobile', 'package', 'paymentMethod', 'createdAt', 'status']) &&
+           order.name is string && order.name.size() > 0 &&
+           order.address is string && order.address.size() > 0 &&
+           order.mobile is string && order.mobile.size() > 0 &&
+           order.package in ['single', 'family'] &&
+           order.paymentMethod == 'cod' &&
+           order.status == 'pending' &&
+           order.createdAt == request.time;
+  }
+}
