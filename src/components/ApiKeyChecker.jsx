@@ -4,6 +4,7 @@ import steadfastApi from '../services/steadfastApi'
 const ApiKeyChecker = () => {
   const [isChecking, setIsChecking] = useState(false)
   const [result, setResult] = useState(null)
+  const [envTest, setEnvTest] = useState(null)
 
   const checkApiKeys = async () => {
     setIsChecking(true)
@@ -17,6 +18,7 @@ const ApiKeyChecker = () => {
         data: response
       })
     } catch (error) {
+      console.error('API test error:', error)
       setResult({
         success: false,
         message: error.message,
@@ -24,6 +26,16 @@ const ApiKeyChecker = () => {
       })
     } finally {
       setIsChecking(false)
+    }
+  }
+
+  const testEnvironment = async () => {
+    try {
+      const response = await fetch('/.netlify/functions/test-env')
+      const data = await response.json()
+      setEnvTest(data)
+    } catch (error) {
+      setEnvTest({ error: error.message })
     }
   }
 
@@ -45,17 +57,34 @@ const ApiKeyChecker = () => {
           </p>
         </div>
 
-        <div>
-          <button
-            onClick={checkApiKeys}
-            disabled={isChecking}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {isChecking ? 'Testing...' : 'Test API Connection'}
-          </button>
+        <div className="space-y-3">
+          <div className="flex gap-3">
+            <button
+              onClick={testEnvironment}
+              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors text-sm"
+            >
+              Test Environment
+            </button>
+            <button
+              onClick={checkApiKeys}
+              disabled={isChecking}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              {isChecking ? 'Testing...' : 'Test API Connection'}
+            </button>
+          </div>
+
+          {envTest && (
+            <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
+              <p className="font-medium text-gray-800 text-sm">Environment Test:</p>
+              <pre className="text-xs mt-1 text-gray-600">
+                {JSON.stringify(envTest, null, 2)}
+              </pre>
+            </div>
+          )}
 
           {result && (
-            <div className={`mt-4 p-4 rounded-md ${
+            <div className={`p-4 rounded-md ${
               result.success 
                 ? 'bg-green-50 border border-green-200' 
                 : 'bg-red-50 border border-red-200'
