@@ -1,47 +1,27 @@
-// Steadfast Courier API Integration
-const STEADFAST_BASE_URL = 'https://portal.packzy.com/api/v1'
-
-// Note: In production, these should be environment variables
-const API_CONFIG = {
-  apiKey: import.meta.env.VITE_STEADFAST_API_KEY || '',
-  secretKey: import.meta.env.VITE_STEADFAST_SECRET_KEY || '',
-  baseUrl: STEADFAST_BASE_URL
-}
-
+// Steadfast Courier API Integration via Netlify Functions
 class SteadfastAPI {
   constructor() {
-    this.headers = {
-      'Api-Key': API_CONFIG.apiKey,
-      'Secret-Key': API_CONFIG.secretKey,
-      'Content-Type': 'application/json'
-    }
+    // Use Netlify function endpoint instead of direct API calls
+    this.functionUrl = '/.netlify/functions/steadfast-api'
   }
 
   async createOrder(orderData) {
     try {
-      // Check if API keys are configured
-      if (!API_CONFIG.apiKey || !API_CONFIG.secretKey) {
-        throw new Error('Steadfast API keys not configured. Please add them to .env.local file.')
-      }
-
-      const response = await fetch(`${API_CONFIG.baseUrl}/create_order`, {
+      const response = await fetch(this.functionUrl, {
         method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify(orderData)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'create_order',
+          data: orderData
+        })
       })
-      
-      // Handle non-JSON responses (like "Unauthorized Access")
-      const contentType = response.headers.get('content-type')
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text()
-        throw new Error(`API Error: ${text}`)
-      }
       
       const result = await response.json()
       
-      // Check for API errors
-      if (!response.ok || result.status !== 200) {
-        throw new Error(result.message || `API Error: ${response.status}`)
+      if (!response.ok) {
+        throw new Error(result.error || `API Error: ${response.status}`)
       }
       
       return result
@@ -95,12 +75,23 @@ class SteadfastAPI {
 
   async getCurrentBalance() {
     try {
-      const response = await fetch(`${API_CONFIG.baseUrl}/get_balance`, {
-        method: 'GET',
-        headers: this.headers
+      const response = await fetch(this.functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'check_balance'
+        })
       })
       
-      return await response.json()
+      const result = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(result.error || `API Error: ${response.status}`)
+      }
+      
+      return result
     } catch (error) {
       console.error('Error getting balance:', error)
       throw error
