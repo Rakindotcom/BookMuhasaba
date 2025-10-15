@@ -9,7 +9,7 @@ service cloud.firestore {
       // Only authenticated users can read and update orders - for admin panel
       allow read, update: if request.auth != null;
       
-      // No one can delete orders
+      // No delete permissions needed - we hide orders instead of deleting
       allow delete: if false;
     }
     

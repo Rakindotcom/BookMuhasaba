@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase/config'
 import Toast from './Toast'
+import OrderSuccessPopup from './OrderSuccessPopup'
 import { useToast } from '../hooks/useToast'
 
 const OrderForm = () => {
@@ -13,6 +14,8 @@ const OrderForm = () => {
     paymentMethod: 'cod'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
+  const [validationErrors, setValidationErrors] = useState({})
   const { toast, showToast, hideToast } = useToast()
 
   const packages = {
@@ -26,16 +29,53 @@ const OrderForm = () => {
   const total = subtotal + shippingCost
 
   const handleChange = (e) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     })
+    
+    // Clear validation error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors({
+        ...validationErrors,
+        [name]: ''
+      })
+    }
+  }
+
+  const validateForm = () => {
+    const errors = {}
+    
+    if (!formData.name.trim()) {
+      errors.name = 'আপনার নাম লিখুন'
+    }
+    
+    if (!formData.address.trim()) {
+      errors.address = 'বিস্তারিত ঠিকানা দিন'
+    }
+    
+    if (!formData.mobile.trim()) {
+      errors.mobile = 'মোবাইল নাম্বার লিখুন'
+    } else if (!/^[0-9+\-\s()]+$/.test(formData.mobile)) {
+      errors.mobile = 'সঠিক মোবাইল নাম্বার লিখুন'
+    }
+    
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      showToast('অনুগ্রহ করে সব তথ্য সঠিকভাবে পূরণ করুন।', 'error')
+      return
+    }
+    
     setIsSubmitting(true)
 
     try {
@@ -50,7 +90,8 @@ const OrderForm = () => {
         status: 'pending'
       })
 
-      showToast('অর্ডার সফলভাবে জমা দেওয়া হয়েছে! আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।', 'success')
+      // Show success popup instead of toast
+      setShowSuccessPopup(true)
 
       // Reset form
       setFormData({
@@ -60,6 +101,7 @@ const OrderForm = () => {
         package: 'single',
         paymentMethod: 'cod'
       })
+      setValidationErrors({})
     } catch (error) {
       console.error('Error submitting order:', error)
       showToast('অর্ডার জমা দিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।', 'error')
@@ -142,11 +184,13 @@ const OrderForm = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className={`w-full px-5 py-4 text-xl border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                        validationErrors.name ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       placeholder="আপনার নাম লিখুন"
                     />
-                    {!formData.name && (
-                      <p className="text-red-500 text-xl mt-1">আপনার নাম লিখুন is required</p>
+                    {validationErrors.name && (
+                      <p className="text-red-500 text-lg mt-1">{validationErrors.name}</p>
                     )}
                   </div>
 
@@ -160,9 +204,14 @@ const OrderForm = () => {
                       onChange={handleChange}
                       required
                       rows="4"
-                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                      className={`w-full px-5 py-4 text-xl border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none ${
+                        validationErrors.address ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       placeholder="বিস্তারিত ঠিকানা লিখুন"
                     />
+                    {validationErrors.address && (
+                      <p className="text-red-500 text-lg mt-1">{validationErrors.address}</p>
+                    )}
                   </div>
 
                   <div>
@@ -175,9 +224,14 @@ const OrderForm = () => {
                       value={formData.mobile}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 text-xl border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className={`w-full px-5 py-4 text-xl border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                        validationErrors.mobile ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       placeholder="মোবাইল নাম্বার লিখুন"
                     />
+                    {validationErrors.mobile && (
+                      <p className="text-red-500 text-lg mt-1">{validationErrors.mobile}</p>
+                    )}
                   </div>
 
                   {/* Shipping */}
@@ -287,6 +341,11 @@ const OrderForm = () => {
         isVisible={toast.isVisible}
         onClose={hideToast}
         duration={toast.duration}
+      />
+      
+      <OrderSuccessPopup
+        isVisible={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
       />
     </section>
   )

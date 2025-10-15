@@ -1,7 +1,8 @@
 {
-  "name": "bookmuhasaba",
+  "name": "muhasaba-journal",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "মুহাসাবা জার্নাল - দ্য মুসলিম হ্যাবিট ট্র্যাকার ই-কমার্স সাইট",
   "type": "module",
   "scripts": {
     "dev": "vite",
